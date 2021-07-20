@@ -4,10 +4,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CASMap {
-    public static Resp doLogic(ConcurrentHashMap<String, ConcurrentLinkedQueue<String>> queue, Req req) {
+    public Resp doLogic(ConcurrentHashMap<String, ConcurrentLinkedQueue<String>> queue, Req req) {
         Resp result = new Resp("incorrect request", 400);
         if (req.getMethod().equals("POST")) {
-            result = doPostLogic(queue, req);
+            result = new CASMap().doPostLogic(queue, req);
         }
         if (req.getMethod().equals("GET")) {
             if (queue.get(req.getTheme()) == null) {
@@ -20,7 +20,7 @@ public class CASMap {
         return result;
     }
 
-    private static Resp doPostLogic(ConcurrentHashMap<String, ConcurrentLinkedQueue<String>> queue, Req req) {
+    private Resp doPostLogic(ConcurrentHashMap<String, ConcurrentLinkedQueue<String>> queue, Req req) {
         String text = "message posted successfully";
         int status = 200;
         if (queue.get(req.getTheme()) == null) {

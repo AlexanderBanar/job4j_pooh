@@ -14,15 +14,7 @@ public class Req {
     }
 
     public Req(String text) {
-        Req temp = Req.of(text);
-        this.method = temp.method;
-        this.mode = temp.mode;
-        this.theme = temp.theme;
-        this.message = temp.message;
-    }
-
-    public static Req of(String content) {
-        String[] parsedContent = content.split("/");
+        String[] parsedContent = text.split("/");
         String method = parsedContent[0];
         String mode = parsedContent[1];
         String rawText = parsedContent[2];
@@ -35,7 +27,10 @@ public class Req {
         } else {
             theme = rawText;
         }
-        return new Req(method, mode, theme, message);
+        this.method = method;
+        this.mode = mode;
+        this.theme = theme;
+        this.message = message;
     }
 
     public String getMethod() {
