@@ -8,6 +8,7 @@ public class TopicService implements Service {
 
     @Override
     public Resp process(Req req) {
-        return CASMap.doLogic(queue, req);
+        CASMap casMap = new CASMap();
+        return casMap.doLogic(queue, req);
     }
 }
