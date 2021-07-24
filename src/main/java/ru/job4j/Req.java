@@ -13,29 +13,16 @@ public class Req {
         this.message = message;
     }
 
-    public static void main(String[] args) {
-        String s = "/GET/queue/topic HTTP/1.1";
-        String[] splitted = s.split("/");
-        System.out.println(splitted[0]);
-
-//        System.out.println(splitted[1]);
-//        System.out.println(splitted[2]);
-    }
-
     public Req(String text) {
-        String[] parsedContent = text.split("/");
-        String method = parsedContent[1];
-        String mode = parsedContent[2];
-        String rawText = parsedContent[3];
-        String theme;
-        String message = "";
-        if (rawText.contains("-d")) {
-            String[] parsedRawText = rawText.split("-d");
-            theme = parsedRawText[0].trim();
-            message = parsedRawText[1].trim();
-        } else {
-            theme = rawText;
+        String method = "GET";
+        if (text.contains("POST")) {
+            method = "POST";
         }
+        String[] splitText = text.split("/");
+        String mode = splitText[1];
+        String theme = splitText[2].replace(" HTTP", "");
+        String[] rawMessage = splitText[splitText.length - 1].split("\n");
+        String message = rawMessage[2];
         this.method = method;
         this.mode = mode;
         this.theme = theme;
