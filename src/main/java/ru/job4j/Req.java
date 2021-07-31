@@ -5,28 +5,43 @@ public class Req {
     private final String mode;
     private final String theme;
     private final String message;
+    private final int id;
 
-    private Req(String method, String mode, String theme, String message) {
+    public Req(String method, String mode, String theme, String message, int id) {
         this.method = method;
         this.mode = mode;
         this.theme = theme;
         this.message = message;
+        this.id = id;
     }
 
     public Req(String text) {
+        String[] splitByHttp = text.split("HTTP/1.1");
+        String[] splitByHttpAndSlash = splitByHttp[0].split("/");
         String method = "GET";
-        if (text.contains("POST")) {
+        if (splitByHttpAndSlash[0].contains("POST")) {
             method = "POST";
         }
-        String[] splitText = text.split("/");
-        String mode = splitText[1];
-        String theme = splitText[2].replace(" HTTP", "");
-        String[] rawMessage = splitText[splitText.length - 1].split("\n");
-        String message = rawMessage[2];
+        String mode = "queue";
+        if (splitByHttpAndSlash[1].contains("topic")) {
+            mode = "topic";
+        }
+        String theme = splitByHttpAndSlash[2].trim();
+        int id = 0;
+        if (splitByHttpAndSlash.length > 3) {
+            id = Integer.parseInt(splitByHttpAndSlash[3].trim());
+        }
+        String message = "";
+        if (method.equals("POST")) {
+            String[] splitText = text.split("/");
+            String[] rawMessage = splitText[splitText.length - 1].split("\n");
+            message = rawMessage[2];
+        }
         this.method = method;
         this.mode = mode;
         this.theme = theme;
         this.message = message;
+        this.id = id;
     }
 
     public String getMethod() {
@@ -43,5 +58,9 @@ public class Req {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getId() {
+        return id;
     }
 }
